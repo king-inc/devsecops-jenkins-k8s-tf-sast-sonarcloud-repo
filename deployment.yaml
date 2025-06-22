@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aceeinbuggy-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aceeinbuggy
+  template:
+    metadata:
+      labels:
+        app: aceeinbuggy
+    spec:
+      containers:
+      - name: aceeinbuggy
+        image: 926352914341.dkr.ecr.us-west-2.amazonaws.com/aceein
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+# service type loadbalancer       
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: aceeinbuggy
+    k8s-app: aceeinbuggy
+  name: aceeinbuggy
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  type: LoadBalancer
+  selector:
+    app: aceeinbuggy
